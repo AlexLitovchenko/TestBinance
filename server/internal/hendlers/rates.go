@@ -4,6 +4,7 @@ import (
 	"AlexLitovchenko/TestBinance/server/internal/errs"
 	"AlexLitovchenko/TestBinance/server/internal/service"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -21,6 +22,8 @@ func GetRatesHandler(w http.ResponseWriter, r *http.Request) {
 func RatesGetRequest(w http.ResponseWriter, r *http.Request) {
 	pairsParam := r.URL.Query().Get("pairs")
 	pairs := strings.Split(pairsParam, ",")
+
+	fmt.Printf("Get request with pairs: %v\n", pairsParam)
 
 	resp, err := service.MakeRatesResp(pairs)
 	if err != nil {
@@ -44,6 +47,9 @@ func RatesPostRequest(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	fmt.Printf("Post request with pairs: %v\n", request)
+
 	resp, err := service.MakeRatesResp(request.Pairs)
 	if err != nil {
 		http.Error(w, err.Msg, err.Key)
